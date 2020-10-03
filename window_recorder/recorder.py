@@ -50,10 +50,8 @@ class WindowRecorder:
                 parts = line.split(":", 1)
                 properties[parts[0].strip()] = parts[1].strip()
 
-        top, left = int(properties["Absolute upper-left X"]), int(properties["Absolute upper-left Y"])
+        left, top = int(properties["Absolute upper-left X"]), int(properties["Absolute upper-left Y"])
         width, height = int(properties["Width"]), int(properties["Height"])
-        # seems to need a little offset to avoid capturing background
-        left += 2
 
         self.monitor = {"top": top, "left": left, "width": width, "height": height}
         self.frame_rate = frame_rate
