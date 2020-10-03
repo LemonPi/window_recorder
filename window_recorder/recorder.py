@@ -1,4 +1,4 @@
-from mss.linux import MSS as mss
+import os
 import cv2
 import time
 import numpy as np
@@ -6,6 +6,10 @@ import subprocess
 import logging
 from multiprocessing import SimpleQueue, Process
 from datetime import datetime
+from mss.linux import MSS as mss
+from window_recorder import cfg
+
+logger = logging.getLogger(__name__)
 
 
 def _record_loop(q: SimpleQueue, filename, monitor, frame_rate):
@@ -29,13 +33,13 @@ def _record_loop(q: SimpleQueue, filename, monitor, frame_rate):
 class WindowRecorder:
     """Programatically video record a window in Linux (requires xwininfo)"""
 
-    def __init__(self, window_names=("RViz*", "RViz"), frame_rate=30.0, name_suffix=""):
+    def __init__(self, window_names=("RViz*", "RViz"), frame_rate=30.0, name_suffix="", save_dir=None):
         for name in window_names:
             try:
                 output = subprocess.check_output(["xwininfo", "-name", name], universal_newlines=True)
                 break
             except subprocess.CalledProcessError as e:
-                logging.debug("Could not find window named {}, trying next in list".format(name))
+                logger.debug("Could not find window named {}, trying next in list".format(name))
                 pass
         else:
             raise RuntimeError("Could not find any windows with names from {}".format(window_names))
@@ -54,9 +58,14 @@ class WindowRecorder:
         self.monitor = {"top": top, "left": left, "width": width, "height": height}
         self.frame_rate = frame_rate
         self.suffix = name_suffix
+        self.save_dir = save_dir
+        if self.save_dir is None:
+            self.save_dir = cfg.CAPTURE_DIR
 
     def __enter__(self):
-        output = "{}_{}.mp4".format(datetime.now().strftime('%Y_%m_%d_%H_%M_%S'), self.suffix)
+        output = os.path.join(self.save_dir,
+                              "{}_{}.mp4".format(datetime.now().strftime('%Y_%m_%d_%H_%M_%S'), self.suffix))
+        logger.debug("Recording video to {}".format(output))
         self.q = SimpleQueue()
         self.record_process = Process(target=_record_loop,
                                       args=(self.q, output, self.monitor, self.frame_rate))
