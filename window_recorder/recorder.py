@@ -8,6 +8,7 @@ from multiprocessing import SimpleQueue, Process
 from datetime import datetime
 from mss.linux import MSS as mss
 from window_recorder import cfg
+from typing import Iterable, AnyStr
 
 logger = logging.getLogger(__name__)
 
@@ -42,16 +43,21 @@ def _record_loop(q: SimpleQueue, filename, monitor, frame_rate):
 class WindowRecorder:
     """Programatically video record a window in Linux (requires xwininfo)"""
 
-    def __init__(self, window_names=("RViz*", "RViz"), frame_rate=30.0, name_suffix="", save_dir=None):
-        for name in window_names:
-            try:
-                output = subprocess.check_output(["xwininfo", "-name", name], universal_newlines=True)
-                break
-            except subprocess.CalledProcessError as e:
-                logger.debug("Could not find window named {}, trying next in list".format(name))
-                pass
+    def __init__(self, window_names: Iterable[AnyStr] = None, frame_rate=30.0, name_suffix="", save_dir=None):
+        if window_names is None:
+            logger.info("Select a window to record by left clicking with your mouse")
+            output = subprocess.check_output(["xwininfo"], universal_newlines=True)
+            logger.info("Selected {}".format(output))
         else:
-            raise RuntimeError("Could not find any windows with names from {}".format(window_names))
+            for name in window_names:
+                try:
+                    output = subprocess.check_output(["xwininfo", "-name", name], universal_newlines=True)
+                    break
+                except subprocess.CalledProcessError as e:
+                    logger.debug("Could not find window named {}, trying next in list".format(name))
+                    pass
+            else:
+                raise RuntimeError("Could not find any windows with names from {}".format(window_names))
 
         properties = {}
         for line in output.split("\n"):

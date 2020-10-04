@@ -22,6 +22,7 @@ context manager.
 from window_recorder.recorder import WindowRecorder
 import time
 
+# passing in nothing as the window name will allow you to select the window by clicking
 # want to capture an RViz window, which could have name "RViz*" as well
 with WindowRecorder(["RViz*", "RViz"], frame_rate=30.0, name_suffix="rviz"):
     # do things...
