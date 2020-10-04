@@ -5,6 +5,10 @@ Install `opencv` and `mss` as dependencies (recommended with conda):
 conda install opencv
 conda install -c conda-forge mss
 ```
+Then clone this repository anywhere and install locally with
+```
+pip install -e .
+```
 
 ## Usage
 The `WindowRecorder` class comes as a context manager.
@@ -25,3 +29,6 @@ with WindowRecorder(["RViz*", "RViz"], frame_rate=30.0, name_suffix="rviz"):
     while time.time() - start < 2:
         time.sleep(0.1)
 ```
+
+## Troubleshooting
+Ensure the window is fully in the monitor (have no parts hidden on the sides of monitors).
