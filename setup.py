@@ -9,5 +9,5 @@ setup(
     author='zhsh',
     author_email='zhsh@umich.edu',
     description='Programatically video record a window given by name in Linux',
-    install_requires=['opencv', 'mss']
+    install_requires=['opencv-python', 'mss']
 )
