@@ -36,7 +36,7 @@ def _record_loop(q: SimpleQueue, filename, monitor, frame_rate):
             # wait for frame rate time
             elapsed = time.time() - start_time
             if elapsed < period:
-                time.sleep(period - elapsed - 0.0002)
+                time.sleep(period - elapsed)
         out.release()
 
 
