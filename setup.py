@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='window_recorder',
-    version='0.1.0',
+    version='0.1.1',
     packages=['window_recorder'],
     url='https://github.com/LemonPi/window_recorder',
     license='MIT',

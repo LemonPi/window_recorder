@@ -22,6 +22,7 @@ context manager.
 from window_recorder.recorder import WindowRecorder
 import time
 
+# want to capture an RViz window, which could have name "RViz*" as well
 with WindowRecorder(["RViz*", "RViz"], frame_rate=30.0, name_suffix="rviz"):
     # do things...
     time.sleep(0.1)
@@ -29,6 +30,3 @@ with WindowRecorder(["RViz*", "RViz"], frame_rate=30.0, name_suffix="rviz"):
     while time.time() - start < 2:
         time.sleep(0.1)
 ```
-
-## Troubleshooting
-Ensure the window is fully in the monitor (have no parts hidden on the sides of monitors).
