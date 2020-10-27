@@ -3,7 +3,7 @@ This only works on Linux systems. You should have `xwininfo` installed by defaul
 Install `opencv` and `mss` as dependencies (recommended with conda):
 ```
 conda install opencv
-conda install -c conda-forge mss
+conda install -c conda-forge python-mss
 ```
 Then clone this repository anywhere and install locally with
 ```
