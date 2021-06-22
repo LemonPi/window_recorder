@@ -76,6 +76,9 @@ class WindowRecorder:
             self.save_dir = cfg.CAPTURE_DIR
 
     def __enter__(self):
+        if not os.path.exists(self.save_dir):
+            raise FileNotFoundError("Trying to record to {}, but folder does not exist".format(self.save_dir))
+
         output = os.path.join(self.save_dir,
                               "{}_{}.mp4".format(datetime.now().strftime('%Y_%m_%d_%H_%M_%S'), self.suffix))
         logger.debug("Recording video to {}".format(output))
