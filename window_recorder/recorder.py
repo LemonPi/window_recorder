@@ -47,17 +47,17 @@ class WindowRecorder:
         if window_names is None:
             logger.info("Select a window to record by left clicking with your mouse")
             output = subprocess.check_output(["xwininfo"], universal_newlines=True)
-            logger.info("Selected {}".format(output))
+            logger.info(f"Selected {output}")
         else:
             for name in window_names:
                 try:
                     output = subprocess.check_output(["xwininfo", "-name", name], universal_newlines=True)
                     break
                 except subprocess.CalledProcessError as e:
-                    logger.debug("Could not find window named {}, trying next in list".format(name))
+                    logger.debug(f"Could not find window named {name}, trying next in list")
                     pass
             else:
-                raise RuntimeError("Could not find any windows with names from {}".format(window_names))
+                raise RuntimeError(f"Could not find any windows with names from {window_names}")
 
         properties = {}
         for line in output.split("\n"):
@@ -77,11 +77,11 @@ class WindowRecorder:
 
     def __enter__(self):
         if not os.path.exists(self.save_dir):
-            raise FileNotFoundError("Trying to record to {}, but folder does not exist".format(self.save_dir))
+            raise FileNotFoundError(f"Trying to record to {self.save_dir}, but folder does not exist")
 
         output = os.path.join(self.save_dir,
-                              "{}_{}.mp4".format(datetime.now().strftime('%Y_%m_%d_%H_%M_%S'), self.suffix))
-        logger.debug("Recording video to {}".format(output))
+                              f"{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}_{self.suffix}.mp4")
+        logger.debug(f"Recording video to {output}")
         self.q = SimpleQueue()
         self.record_process = Process(target=_record_loop,
                                       args=(self.q, output, self.monitor, self.frame_rate))
