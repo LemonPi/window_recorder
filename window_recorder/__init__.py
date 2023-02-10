@@ -1,0 +1,1 @@
+from window_recorder.recorder import WindowRecorder

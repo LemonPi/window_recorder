@@ -19,7 +19,7 @@ The video will start and end recording according to the life cycle of the
 context manager.
 
 ```python
-from window_recorder.recorder import WindowRecorder
+from window_recorder import WindowRecorder
 import time
 
 # passing in nothing as the window name will allow you to select the window by clicking
