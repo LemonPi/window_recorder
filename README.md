@@ -1,5 +1,11 @@
 ## Installation
 This only works on Linux systems. You should have `xwininfo` installed by default.
+
+```shell
+pip install window-recorder
+```
+
+If the above does not work (OpenCV can be finicky), then you can install the dependencies manually.
 Install `opencv` and `mss` as dependencies (recommended with conda):
 ```
 conda install opencv
