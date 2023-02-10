@@ -37,3 +37,12 @@ with WindowRecorder(["RViz*", "RViz"], frame_rate=30.0, name_suffix="rviz"):
     while time.time() - start < 2:
         time.sleep(0.1)
 ```
+
+You can test it out with `scripts/text.py` which will prompt you to
+click a window that it will then record for 2 seconds
+(see the log for the default location the video will be saved to)
+
+### Limitations
+The original location of the window will be what is actually recorded,
+so if you move the window during the recording or another window comes
+in front of it, that will also be recorded.
