@@ -20,6 +20,8 @@ pip install -e .
 The `WindowRecorder` class comes as a context manager.
 You pass in a list of window names to record and it will try to find them
 in the order given, recording the first one with a valid window configuration.
+If you pass in None as the first argument, then instead it will prompt you
+to click on a window (cursor turns into a cross and blocks until you click).
 
 The video will start and end recording according to the life cycle of the
 context manager.
