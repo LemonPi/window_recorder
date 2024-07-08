@@ -43,7 +43,11 @@ def _record_loop(q: SimpleQueue, filename, monitor, frame_rate):
 class WindowRecorder:
     """Programatically video record a window in Linux (requires xwininfo)"""
 
-    def __init__(self, window_names: Iterable[AnyStr] = None, frame_rate=30.0, name_suffix="", save_dir=None):
+    def __init__(self, window_names: Iterable[AnyStr] = None, frame_rate=30.0, name_suffix="", save_dir=None,
+                 record=True):
+        self.record = record
+        if not self.record:
+            return
         if window_names is None:
             logger.info("Select a window to record by left clicking with your mouse")
             output = subprocess.check_output(["xwininfo"], universal_newlines=True)
@@ -76,6 +80,8 @@ class WindowRecorder:
             self.save_dir = cfg.CAPTURE_DIR
 
     def __enter__(self):
+        if not self.record:
+            return self
         os.makedirs(self.save_dir, exist_ok=True)
         output = os.path.join(self.save_dir,
                               f"{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}_{self.suffix}.mp4")
@@ -87,6 +93,8 @@ class WindowRecorder:
         return self
 
     def __exit__(self, *args):
+        if not self.record:
+            return
         self.q.put('die')
         self.record_process.join()
         cv2.destroyAllWindows()

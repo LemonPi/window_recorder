@@ -1,6 +1,6 @@
 [project]
 name = "window_recorder"
-version = "0.2.1"
+version = "0.3.0"
 description = "Programatically video record a window as a context manager"
 readme = "README.md" # Optional
 
