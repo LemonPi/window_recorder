@@ -9,6 +9,7 @@ from datetime import datetime
 from mss.linux import MSS as mss
 from window_recorder import cfg
 from typing import Iterable, AnyStr
+import signal
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,11 @@ class WindowRecorder:
         if self.save_dir is None:
             self.save_dir = cfg.CAPTURE_DIR
 
+        # Register signal handlers
+        self.record_process = None
+        signal.signal(signal.SIGINT, self.signal_handler)
+        signal.signal(signal.SIGTERM, self.signal_handler)
+
     def __enter__(self):
         if not self.record:
             return self
@@ -95,6 +101,18 @@ class WindowRecorder:
     def __exit__(self, *args):
         if not self.record:
             return
-        self.q.put('die')
-        self.record_process.join()
-        cv2.destroyAllWindows()
+        self.cleanup()
+
+    def cleanup(self):
+        """Cleanup resources."""
+        if self.record_process and self.record_process.is_alive():
+            self.q.put('die')
+            self.record_process.join()
+            cv2.destroyAllWindows()
+
+    def signal_handler(self, signum, frame):
+        """Signal handler to ensure context manager cleanup runs on SIGINT/SIGTERM."""
+        print(f"Received signal: {signal.Signals(signum).name}")
+        self.cleanup()
+        # Optionally re-raise the signal to Python to allow the interrupt to propagate further
+        os.kill(os.getpid(), signum)
